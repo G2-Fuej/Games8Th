@@ -1,0 +1,48 @@
+#pragma once
+#include "../../../Games8Th/utils/memory/memorycommon.h"
+#include "../../../Games8Th/utils/math/vector/vector.h"
+#include "../../../Games8Th/utils/schema/schema.h"
+#include "../C_CSWeaponBase/C_CSWeaponBase.h"
+#include "../C_BaseEntity/C_BaseEntity.h"
+
+#include <cstdint>
+
+class C_CSPlayerPawn : public C_BaseEntity {
+public:
+	schema(Vector_t, m_vOldOrigin, "C_BasePlayerPawn->m_vOldOrigin");
+	schema(Vector_t, m_vecViewOffset, "C_BaseModelEntity->m_vecViewOffset");
+	schema(CCSPlayer_WeaponServices*, m_pWeaponServices, "C_BasePlayerPawn->m_pWeaponServices");
+	schema(CPlayer_ObserverServices*, m_pObserverServices, "C_BasePlayerPawn->m_pObserverServices");
+	schema(void*, m_pMovementServices, "C_BasePlayerPawn->m_pMovementServices");  // CCSPlayer_MovementServices*
+	// CCSPlayer_ItemServices* - m_bHasHelmet @ +0x49, m_bHasDefuser @ +0x48
+	schema(void*, m_pItemServices, "C_BasePlayerPawn->m_pItemServices");
+	// Live dump: both live on C_BaseEntity (not C_BasePlayerPawn) - wrong class = schema miss 0x0A6DB2C3
+	schema(Vector_t, m_vecVelocity, "C_BaseEntity->m_vecVelocity");
+	schema(Vector_t, m_vecAbsVelocity, "C_BaseEntity->m_vecAbsVelocity");
+	schema(std::
+int32_t, m_ArmorValue, "C_CSPlayerPawn->m_ArmorValue");
+	schema(bool, m_bIsScoped, "C_CSPlayerPawn->m_bIsScoped");
+	schema(bool, m_bIsDefusing, "C_CSPlayerPawn->m_bIsDefusing");
+	schema(bool, m_bIsGrabbingHostage, "C_CSPlayerPawn->m_bIsGrabbingHostage");
+	// DM spawn protect / freeze-style invuln - enemy is immune + usually invisible
+	schema(bool, m_bGunGameImmunity, "C_CSPlayerPawn->m_bGunGameImmunity");
+	schema(float, m_flFlashDuration, "C_CSPlayerPawnBase->m_flFlashDuration");
+	schema(float, m_flFlashOverlayAlpha, "C_CSPlayerPawnBase->m_flFlashOverlayAlpha");
+	schema(float, m_flFlashMaxAlpha, "C_CSPlayerPawnBase->m_flFlashMaxAlpha");
+	C_CSPlayerPawn(uintptr_t address);
+
+	C_CSWeaponBase* GetActiveWeapon()
+const;
+	CCSPlayer_WeaponServices* GetWeaponServices()
+const;
+	Vector_t getPosition() const;
+	Vector_t getEyePosition() const;
+
+	uintptr_t getAddress() const;
+	int getHealth() const;
+	uint8_t getTeam() const;
+	Vector_t getViewOffset() const;
+private:
+	uintptr_t address;
+};
+

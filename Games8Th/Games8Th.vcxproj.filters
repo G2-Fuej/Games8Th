@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4B04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External Dependencies">
+      <UniqueIdentifier>{3BA57E14-8AC2-485A-B12C-F06690C43D6E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Games8Th\Games8Th.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_draw.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_tables.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_widgets.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_impl_dx11.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\imgui\imgui_impl_win32.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\lz4.c">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\safetyhook\safetyhook.cpp">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+    <ClCompile Include="external\safetyhook\Zydis.c">
+      <Filter>External Dependencies</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\Games8Th\Games8Th.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\includes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\imgui\imgui.h">
+      <Filter>External Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\json.hpp">
+      <Filter>External Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="external\lz4.h">
+      <Filter>External Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="external\stb_image.h">
+      <Filter>External Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="external\safetyhook\safetyhook.hpp">
+      <Filter>External Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="external\safetyhook\Zydis.h">
+      <Filter>External Dependencies</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
