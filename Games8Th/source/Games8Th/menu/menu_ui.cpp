@@ -199,7 +199,10 @@ void AnimTick(bool openTarget) {
     float dt = ImGui::GetIO().DeltaTime;
     if (dt <= 0.f || dt > 0.05f)
         dt = 1.f / 60.f;
-    g_anim.open = Saturate(g_anim.open + dt / 0.06f);
+    // Frame-rate independent exponential ease-out: no speed jump on
+    // stutter frames, and the tail never snaps (old linear ramp did).
+    const float k = 1.0f - std::expf(-dt / 0.06f);
+    g_anim.open = Saturate(g_anim.open + k * (1.0f - g_anim.open));
 }
 
 bool AnimVisible() { return g_anim.open > 0.001f; }
@@ -524,13 +527,16 @@ void EndCard() {
             g_pair.has = true; g_pair.min = min; g_pair.max = max;
         } else if (std::fabsf(min.y - g_pair.min.y) < 3.f) {
             ImDrawList* pdl = g_contentDl ? g_contentDl : dl;
-            const float hA = g_pair.max.y - g_pair.min.y;
-            const float hB = max.y - min.y;
+            // Quantize to whole pixels and only fill gaps larger than 2px.
+            // 1-2px AutoResizeY jitter (hover states, subpixel wrap) used to
+            // make this patch block bounce up/down every frame.
+            const float hA = floorf(g_pair.max.y - g_pair.min.y + 0.5f);
+            const float hB = floorf(max.y - min.y + 0.5f);
             ImVec2 eMin, eMax;
-            if (hB > hA + 1.f) {
+            if (hB > hA + 2.f) {
                 eMin = ImVec2(g_pair.min.x, g_pair.max.y - 1.f);
                 eMax = ImVec2(g_pair.max.x, g_pair.max.y + hB - hA);
-            } else if (hA > hB + 1.f) {
+            } else if (hA > hB + 2.f) {
                 eMin = ImVec2(min.x, max.y - 1.f);
                 eMax = ImVec2(max.x, max.y + hA - hB);
             } else {

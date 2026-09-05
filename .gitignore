@@ -51,3 +51,6 @@ cs2 sdk dump all you need/
 
 # ProjectAtlas local index state
 .projectatlas/
+# Local backups (do not track)
+*.bak_*
+*.bak

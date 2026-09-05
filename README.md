@@ -16,7 +16,8 @@
 | **Branding** | Renamed the project from *Lefrizzel Ai* to **Games8Th** |
 | **Menu UI** | Redesigned the ImGui menu — fixed 520×500 layout, modern card-based sidebar design, removed the top-left `/INTERNAL READY` watermark |
 | **Language** | Added a full **Simplified Chinese** translation layer (`config/language.h`, 440+ keys) — all labels, tooltips, combo items and hitsound placeholders are now translatable at runtime |
-| **Anti-Aim** | Added a new Anti-Aim page (pitch / yaw modes, jitter, manual direction keys) based on the previous design, plus **Avoid Backstab** (points yaw away from nearby knife-wielding enemies) and **Yaw Adjust** (+33° model-roll compensation) borrowed from the Velocity source |
+| **Menu UI** | Fixed UI flicker/jitter — frame-rate independent menu open animation, scrollbar-width reserve (no more limit-cycle width/hight oscillation), pixel-aligned pair-fill gap patching in two-column card layouts |
+| **Anti-Aim** | Added a new Anti-Aim page| **Anti-Aim** | Added a new Anti-Aim page (pitch / yaw modes, jitter, manual direction keys) based on the previous design, plus **Avoid Backstab** (points yaw away from nearby knife-wielding enemies) and **Yaw Adjust** (+33° model-roll compensation) borrowed from the Velocity source |
 | **Configuration** | New anti-aim options are saved/loaded through the JSON config system |
 
 Internal DLL cheat for Counter-Strike 2. C++23, D3D11 overlay (ImGui), SafetyHook detours, custom schema-based SDK.
@@ -103,7 +104,13 @@ cs2 dump/                         # SDK offsets dump (patterns, offsets, schemas
 
 ## Update Log
 
-### v1.4 (current)
+### v1.4.1 (current)
+- **UI flicker fix:** menu open/close animation is now frame-rate independent (exponential ease-out instead of linear ramp) — no speed jumps on stutter frames
+- **UI flicker fix:** content area reserves the scrollbar width up front, so the two AutoResizeY card columns no longer change width when the scrollbar appears/disappears (this used to re-wrap text, bounce card heights and toggle the scrollbar every frame)
+- **UI flicker fix:** the pair-fill gap patch between side-by-side cards is pixel-aligned and ignores sub-2px jitter, so the bottom edge no longer bounces frame to frame
+
+### v1.4
+
 - **Crash fixes:** fixed crashes on map change, respawn and leaving a match
 - **Bug fixes:** general fixes across visuals, movement and weapon logic
 

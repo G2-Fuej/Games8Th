@@ -456,8 +456,14 @@ void Menu::render() {
 
     ImGui::SameLine(0, L.gap);
 
+    // Reserve the scrollbar width up front (ApplyTheme uses 6.0f). The
+    // content child shows/hides its scrollbar depending on content height;
+    // without this reserve the two AutoResizeY card columns would change
+    // width by 6px whenever the scrollbar toggles, re-wrapping text and
+    // bouncing card heights every frame (flicker limit cycle).
+    const float kScrollReserve = 6.f;
     const float contentW = (std::max)(1.f,
-        wsize.x - pad * 2.f - L.sidebar - L.gap);
+        wsize.x - pad * 2.f - L.sidebar - L.gap - kScrollReserve);
 
     MenuUI::BeginContent(L, contentW, bodyH);
     {
