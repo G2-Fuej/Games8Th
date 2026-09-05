@@ -210,13 +210,18 @@ void AnimTick(bool openTarget) {
     const float k = 1.0f - std::expf(-(std::max)(dt, 1.f / 240.f) / 0.06f);
     g_anim.open = Saturate(g_anim.open + k * (1.0f - g_anim.open));
     // Safety net: if the animation ever stalls low (e.g. repeated toggles),
-    // snap it to full opacity after 2 seconds instead of staying invisible.
-    static int s_openStallFrames = 0;
+    // snap it to full opacity after 1 second instead of staying invisible.
+    // Frame-count was wrong across refresh rates (150 frames = 5s at 30Hz,
+    // 0.6s at 240Hz); wall-clock time is deterministic everywhere.
+    static float s_openStallStart = -1.f;
     if (g_anim.open < 0.35f) {
-        if (++s_openStallFrames > 150)
+        const float now = static_cast<float>(ImGui::GetTime());
+        if (s_openStallStart < 0.f)
+            s_openStallStart = now;
+        else if (now - s_openStallStart > 1.0f)
             g_anim.open = 1.f;
     } else {
-        s_openStallFrames = 0;
+        s_openStallStart = -1.f;
     }
 }
 

@@ -105,7 +105,13 @@ cs2 dump/                         # SDK offsets dump (patterns, offsets, schemas
 
 ## Update Log
 
-### v1.4.3 (current)
+### v1.4.4 (current)
+- **Animation stall net now wall-clock based:** the 2.5s (150-frame) fallback could
+  take 5s at 30Hz; it is now a deterministic 1-second timeout that snaps the menu
+  to full opacity whenever the open animation ever stalls below 0.35 alpha.
+  Eliminates any remaining "sidebar visible but content blank" state on any refresh rate.
+
+### v1.4.3
 - **Menu open animation fix:** the fade-in is now guaranteed to complete. When `DeltaTime` was tiny (very high FPS / glitchy time source) the exponential ease `k = 1-exp(-dt/tau)` collapsed toward 0, so `g_anim.open` stalled at ~0.05: the ImGui content (cards, text, scrollbars) rendered almost fully transparent while the chrome (sidebar, header, window frame drawn via `AddRectFilled`) stayed opaque — looking like "sidebar flickers against the game, right-side UI is blank". A DeltaTime floor (1/240s) plus a 2-second stall safety net keep the animation bounded.
 - Window on-screen clamp from v1.4.2 is retained.
 
