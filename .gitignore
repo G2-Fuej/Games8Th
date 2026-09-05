@@ -58,3 +58,4 @@ cs2 sdk dump all you need/
 # Local investigation artifacts (not source)
 _font_test/
 _loader_re/
+_inject_tool/
