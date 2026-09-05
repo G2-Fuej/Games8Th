@@ -136,16 +136,3 @@ cs2 dump/                         # SDK offsets dump (patterns, offsets, schemas
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
----
-
-## PwaBlocker — Games8Th.Team 工具模块
-
-本仓库同时承载 Games8Th.Team 的工具链模块：**PWA 屏蔽器（PWA Blocker）** —— 基于 PWA_analysis / PWA36_analysis 分析结果制作的本机组件筛查与拦截工具。
-
-- 目录：[PwaBlocker/](PwaBlocker/)
-- 语言 / 平台：C# / .NET 10 (Windows x64)
-- 功能：自动检测 PWA 安装路径、等待平台进程、实时循环筛查 + 拦截、实时彩色日志、可逆恢复
-- 团队：**Games8Th.Team** 开发与维护
-
-详细说明见 [PwaBlocker/README.md](PwaBlocker/README.md)。
