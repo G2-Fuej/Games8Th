@@ -392,8 +392,8 @@ void Menu::render() {
             startPos.x = Config::menu_x;
             startPos.y = Config::menu_y;
         }
-        startPos.x = (std::min)(startPos.x, (std::max)(0.f, io.DisplaySize.x - L.windowW - 12.f));
-        startPos.y = (std::min)(startPos.y, (std::max)(0.f, io.DisplaySize.y - L.windowH - 12.f));
+        startPos.x = (std::clamp)(startPos.x, 0.f, (std::max)(0.f, io.DisplaySize.x - L.windowW - 12.f));
+        startPos.y = (std::clamp)(startPos.y, 0.f, (std::max)(0.f, io.DisplaySize.y - L.windowH - 12.f));
         ImGui::SetNextWindowPos(startPos, ImGuiCond_Once);
     }
     ImGui::SetNextWindowSizeConstraints(ImVec2(L.windowW, L.windowH), ImVec2(L.windowW, L.windowH));
@@ -413,6 +413,37 @@ void Menu::render() {
 
     const ImVec2 wpos = ImGui::GetWindowPos();
     const ImVec2 wsize = ImGui::GetWindowSize();
+
+    // A stale imgui.ini / menu_size.json position can leave the window
+    // (partly) off-screen: SetNextWindowPos uses Cond_Once, so the saved
+    // position always wins and the on-screen clamp above never applies.
+    // The off-screen content column is then invisible while the sidebar
+    // edge flickers against the game.  Pull it back any frame it is out of
+    // bounds and persist the corrected position.
+    {
+        const ImVec2 ds = io.DisplaySize;
+        bool moved = false;
+        ImVec2 p = wpos;
+        if (ds.x > 64.f && ds.y > 64.f) {
+            if (p.x < 0.f) { p.x = 0.f; moved = true; }
+            if (p.y < 0.f) { p.y = 0.f; moved = true; }
+            if (p.x + wsize.x > ds.x - 4.f) {
+                p.x = (std::max)(0.f, ds.x - wsize.x - 4.f); moved = true;
+            }
+            if (p.y + wsize.y > ds.y - 4.f) {
+                p.y = (std::max)(0.f, ds.y - wsize.y - 4.f); moved = true;
+            }
+        }
+        if (moved) {
+            ImGui::SetWindowPos(ImVec2(p.x, p.y));
+            Config::menu_w = kFixedMenuW;
+            Config::menu_h = kFixedMenuH;
+            Config::menu_x = p.x;
+            Config::menu_y = p.y;
+            internal_config::ConfigManager::SaveMenuSize();
+        }
+    }
+
     const bool dragging = ImGui::IsMouseDown(ImGuiMouseButton_Left);
     if (!dragging && (fabsf(wpos.x - Config::menu_x) > 0.5f
         || fabsf(wpos.y - Config::menu_y) > 0.5f)) {
