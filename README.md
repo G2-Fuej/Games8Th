@@ -105,7 +105,14 @@ cs2 dump/                         # SDK offsets dump (patterns, offsets, schemas
 
 ## Update Log
 
-### v1.4.4 (current)
+### v1.5.0 (current)
+- **Robust CJK font chain:** the menu now tries 6 common Chinese-capable
+  Windows fonts (msyh.ttc, msyhl.ttc, simhei.ttf, simsun.ttc, Deng.ttf,
+  simkai.ttf) before falling back to arial/ImGui default. Previously a
+  lost msyh.ttc made every Chinese label render as blank space while icons
+  and ASCII stayed visible, looking like "sidebar flickers, content blank".
+
+### v1.4.4
 - **Animation stall net now wall-clock based:** the 2.5s (150-frame) fallback could
   take 5s at 30Hz; it is now a deterministic 1-second timeout that snaps the menu
   to full opacity whenever the open animation ever stalls below 0.35 alpha.
