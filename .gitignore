@@ -54,3 +54,7 @@ cs2 sdk dump all you need/
 # Local backups (do not track)
 *.bak_*
 *.bak
+
+# Local investigation artifacts (not source)
+_font_test/
+_loader_re/
