@@ -111,8 +111,25 @@ void AddMenuFonts(float uiFontSize) {
     uiCfg.OversampleV = 1;
     uiCfg.PixelSnapH = true;
 
-    ImFont* font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc",
-        uiFontSize, &uiCfg, kChineseRanges);
+    // Robust CJK font chain: try every common Windows font that actually
+    // contains CJK glyphs before falling back to fonts without any Chinese.
+    // If the default chain (msyh -> arial -> ImGui default) loses and the
+    // game/Windows lacks msyh, every Chinese label renders as blank space
+    // while icons and ASCII stay visible: "sidebar flickers, content blank".
+    static const char* kCjkFonts[] = {
+        "C:\\Windows\\Fonts\\msyh.ttc",
+        "C:\\Windows\\Fonts\\msyhl.ttc",
+        "C:\\Windows\\Fonts\\simhei.ttf",
+        "C:\\Windows\\Fonts\\simsun.ttc",
+        "C:\\Windows\\Fonts\\Deng.ttf",
+        "C:\\Windows\\Fonts\\simkai.ttf"
+    };
+    ImFont* font = nullptr;
+    for (const char* path : kCjkFonts) {
+        font = io.Fonts->AddFontFromFileTTF(path, uiFontSize, &uiCfg, kChineseRanges);
+        if (font)
+            break;
+    }
     if (!font)
         font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\arial.ttf",
             uiFontSize, &uiCfg, kChineseRanges);
