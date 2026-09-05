@@ -201,8 +201,23 @@ void AnimTick(bool openTarget) {
         dt = 1.f / 60.f;
     // Frame-rate independent exponential ease-out: no speed jump on
     // stutter frames, and the tail never snaps (old linear ramp did).
-    const float k = 1.0f - std::expf(-dt / 0.06f);
+    //
+    // DeltaTime floor: when DeltaTime is tiny (very high FPS or a glitchy
+    // time source) k -> 0 and the menu would stay semi-transparent forever:
+    // chrome (drawn via AddRectFilled) stays visible while every ImGui
+    // control fades to ~invisible, which looked like "sidebar flickers,
+    // right-side UI empty". Flooring dt keeps the open animation bounded.
+    const float k = 1.0f - std::expf(-(std::max)(dt, 1.f / 240.f) / 0.06f);
     g_anim.open = Saturate(g_anim.open + k * (1.0f - g_anim.open));
+    // Safety net: if the animation ever stalls low (e.g. repeated toggles),
+    // snap it to full opacity after 2 seconds instead of staying invisible.
+    static int s_openStallFrames = 0;
+    if (g_anim.open < 0.35f) {
+        if (++s_openStallFrames > 150)
+            g_anim.open = 1.f;
+    } else {
+        s_openStallFrames = 0;
+    }
 }
 
 bool AnimVisible() { return g_anim.open > 0.001f; }

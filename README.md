@@ -105,7 +105,12 @@ cs2 dump/                         # SDK offsets dump (patterns, offsets, schemas
 
 ## Update Log
 
-### v1.4.2 (current)
+### v1.4.3 (current)
+- **Menu open animation fix:** the fade-in is now guaranteed to complete. When `DeltaTime` was tiny (very high FPS / glitchy time source) the exponential ease `k = 1-exp(-dt/tau)` collapsed toward 0, so `g_anim.open` stalled at ~0.05: the ImGui content (cards, text, scrollbars) rendered almost fully transparent while the chrome (sidebar, header, window frame drawn via `AddRectFilled`) stayed opaque — looking like "sidebar flickers against the game, right-side UI is blank". A DeltaTime floor (1/240s) plus a 2-second stall safety net keep the animation bounded.
+- Window on-screen clamp from v1.4.2 is retained.
+
+### v1.4.2
+
 - **Off-screen menu fix:** the window position is now clamped back into the display every frame. A stale `imgui.ini` / `menu_size.json` position (e.g. dragged off to the bottom-right corner) used to win over `SetNextWindowPos(Cond_Once)`, leaving the content column outside the visible screen — the sidebar edge flickered against the game while the right-side UI appeared empty. The corrected position is persisted.
 - **Window start position:** clamped on both bounds so a negative or oversized saved position can never place the menu off-screen on first open.
 
