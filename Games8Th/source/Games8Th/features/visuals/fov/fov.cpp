@@ -31,7 +31,7 @@ constexpr std::uintptr_t kViewAspectFlags = 0x551; // nSomeFlags; bit1 force asp
 // IDA camera punch path (client):
 // 0x1808C3E20: eye = vtable+1368(pawn); punch = GetRemovedAimPunch(0x18088BBB0);
 // out = eye + punch (sub_18080C360)
-// 0x18088BBB0 -> services@pawn+0x14B8 -> 0x180812D90 dual-track compose
+// 0x18088BBB0 -> services@pawn+0x1598 -> 0x180812D90 dual-track compose
 // CViewSetup.angles @ +0x4B8 after OverrideView are the PUNCHED camera.
 // Visual no-recoil: restore raw aim (CSGOInput view) so kick is gone.
 // Fire/seed still call GetRemovedAimPunch untouched.

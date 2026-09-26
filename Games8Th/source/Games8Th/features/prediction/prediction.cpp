@@ -12,6 +12,7 @@
 #include "../../../cs2/entity/C_CSPlayerPawn/C_CSPlayerPawn.h"
 #include "../../../cs2/entity/CCSPlayerController/CCSPlayerController.h"
 #include "../../../cs2/entity/C_BaseEntity/C_BaseEntity.h"
+#include "../../offsets/offsets.h"
 
 #include <algorithm>
 #include <bit>
@@ -273,7 +274,7 @@ constexpr std::uintptr_t kPawnAbsVelOff = 0x3F8;
 constexpr std::uintptr_t kPawnVelOff = 0x430;
 constexpr std::uintptr_t kPawnBaseVelOff = 0x510;
 constexpr std::uintptr_t kPawnGroundOff = 0x530;
-constexpr std::uintptr_t kPawnOldOriginOff = 0x13B8;
+constexpr std::uintptr_t kPawnOldOriginOff = Offset::FB::m_vOldOrigin;
 constexpr std::uintptr_t kStaminaOff = 0x694;
 constexpr std::uintptr_t kStaminaJumpOff = 0x6A4;
 

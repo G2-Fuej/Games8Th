@@ -16,15 +16,15 @@ namespace FB {
 	constexpr std::uint32_t m_iHealth              = 0x34C;
 	constexpr std::uint32_t m_iTeamNum             = 0x3E7;
 	constexpr std::uint32_t m_pGameSceneNode       = 0x330;
-	constexpr std::uint32_t m_vecViewOffset        = 0xE78;
-	constexpr std::uint32_t m_clrRender            = 0xC98;
-	constexpr std::uint32_t m_nRenderMode          = 0xC78;
-	constexpr std::uint32_t m_vOldOrigin           = 0x13B8;
+    constexpr std::uint32_t m_vecViewOffset        = 0xF60;
+    constexpr std::uint32_t m_clrRender            = 0xCA0;
+    constexpr std::uint32_t m_nRenderMode          = 0xC80;
+    constexpr std::uint32_t m_vOldOrigin           = 0x14A4;
 	constexpr std::uint32_t m_vecAbsOrigin         = 0xC8;   // CGameSceneNode
 	constexpr std::uint32_t m_modelState           = 0x140;  // CSkeletonInstance
 	constexpr std::uint32_t m_ModelName            = 0xA8;   // CModelState (CUtlSymbolLarge)
-	constexpr std::uint32_t m_pAimPunchServices    = 0x14B8;
-	constexpr std::uint32_t m_iShotsFired          = 0x1C84;
+    constexpr std::uint32_t m_pAimPunchServices    = 0x1598;
+    constexpr std::uint32_t m_iShotsFired          = 0x1EB4;
 	constexpr std::uint32_t m_predictableBaseAngle = 0x50;
 	constexpr std::uint32_t m_predictableBaseAngleVel = 0x5C;
 	constexpr std::uint32_t m_unpredictableBaseAngle = 0xA4;
@@ -32,12 +32,34 @@ namespace FB {
 	constexpr std::uint32_t m_hOwnerEntity        = 0x520;  // C_BaseEntity
 	constexpr std::uint32_t m_designerName        = 0x20;   // CEntityIdentity
 	constexpr std::uint32_t m_pParent             = 0x38;   // CGameSceneNode
-	constexpr std::uint32_t m_flDetonateTime      = 0x1188; // C_BaseGrenade
+    constexpr std::uint32_t m_flDetonateTime      = 0x1270; // C_BaseGrenade
 	constexpr std::uint32_t m_bombsiteCenterA     = 0x648;  // C_CSPlayerResource
 	constexpr std::uint32_t m_bombsiteCenterB     = 0x654;  // C_CSPlayerResource
 
 	// Global RVA - NOT a schema field (pattern/scanner only). Dump ref only.
-	constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x23A4238;
+    constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x25606D8;
+}
+
+// Generated client/engine globals from dumper/output/offsets.hpp (2026-09-25).
+namespace Global {
+    constexpr std::ptrdiff_t dwCSGOInput = 0x2575BB0;
+    constexpr std::ptrdiff_t dwEntityList = 0x27151A8;
+    constexpr std::ptrdiff_t dwGameEntitySystem = 0x27151A8;
+    constexpr std::ptrdiff_t dwGameRules = 0x255C8D8;
+    constexpr std::ptrdiff_t dwGlobalVars = 0x222BF88;
+    constexpr std::ptrdiff_t dwGlowManager = 0x255C8F0;
+    constexpr std::ptrdiff_t dwLocalPlayerController = 0x2537628;
+    constexpr std::ptrdiff_t dwPlantedC4 = 0x24C9290;
+    constexpr std::ptrdiff_t dwPrediction = 0x25605E0;
+    constexpr std::ptrdiff_t dwSensitivity = 0x255C820;
+    constexpr std::ptrdiff_t dwViewAngles = 0x2576238;
+    constexpr std::ptrdiff_t dwViewMatrix = 0x2565A20;
+    constexpr std::ptrdiff_t dwViewRender = 0x25662E0;
+    constexpr std::ptrdiff_t dwWeaponC4 = 0x24C4550;
+    constexpr std::ptrdiff_t engine_dwBuildNumber = 0x61D1E8;
+    constexpr std::ptrdiff_t engine_dwNetworkGameClient = 0x91B1C0;
+    constexpr std::ptrdiff_t engine_dwWindowHeight = 0x91F544;
+    constexpr std::ptrdiff_t engine_dwWindowWidth = 0x91F540;
 }
 
 // Schema if present; otherwise dump fallback. Does not sticky-cache 0 before init.

@@ -398,22 +398,22 @@ void Menu::render() {
 
     const float dpi = L.dpi;
     const ImGuiIO& io = ImGui::GetIO();
-    constexpr float kFixedMenuW = 520.f;
-    constexpr float kFixedMenuH = 500.f;
-    L.windowW = (std::min)(kFixedMenuW, (std::max)(360.f, io.DisplaySize.x - 24.f));
-    L.windowH = (std::min)(kFixedMenuH, (std::max)(300.f, io.DisplaySize.y - 24.f));
-    ImGui::SetNextWindowSize(ImVec2(L.windowW, L.windowH), ImGuiCond_Always);
+    // Layout::Current() applies DPI scaling and clamps to the active backbuffer.
+    // Keep that size instead of overwriting it with the old fixed 520x500 box.
+    const float menuW = L.windowW;
+    const float menuH = L.windowH;
+    ImGui::SetNextWindowSize(ImVec2(menuW, menuH), ImGuiCond_Always);
     {
         ImVec2 startPos(80.f * dpi, 80.f * dpi);
         if (Config::menu_x >= 0.f && Config::menu_y >= 0.f) {
             startPos.x = Config::menu_x;
             startPos.y = Config::menu_y;
         }
-        startPos.x = (std::clamp)(startPos.x, 0.f, (std::max)(0.f, io.DisplaySize.x - L.windowW - 12.f));
-        startPos.y = (std::clamp)(startPos.y, 0.f, (std::max)(0.f, io.DisplaySize.y - L.windowH - 12.f));
+        startPos.x = (std::clamp)(startPos.x, 0.f, (std::max)(0.f, io.DisplaySize.x - menuW - 12.f));
+        startPos.y = (std::clamp)(startPos.y, 0.f, (std::max)(0.f, io.DisplaySize.y - menuH - 12.f));
         ImGui::SetNextWindowPos(startPos, ImGuiCond_Once);
     }
-    ImGui::SetNextWindowSizeConstraints(ImVec2(L.windowW, L.windowH), ImVec2(L.windowW, L.windowH));
+    ImGui::SetNextWindowSizeConstraints(ImVec2(menuW, menuH), ImVec2(menuW, menuH));
     ImGui::SetNextWindowBgAlpha((std::clamp)(Config::menu_opacity, 0.55f, 1.f));
 
     ImGuiWindowFlags flags =
@@ -453,8 +453,8 @@ void Menu::render() {
         }
         if (moved) {
             ImGui::SetWindowPos(ImVec2(p.x, p.y));
-            Config::menu_w = kFixedMenuW;
-            Config::menu_h = kFixedMenuH;
+            Config::menu_w = menuW;
+            Config::menu_h = menuH;
             Config::menu_x = p.x;
             Config::menu_y = p.y;
             internal_config::ConfigManager::SaveMenuSize();
@@ -464,8 +464,8 @@ void Menu::render() {
     const bool dragging = ImGui::IsMouseDown(ImGuiMouseButton_Left);
     if (!dragging && (fabsf(wpos.x - Config::menu_x) > 0.5f
         || fabsf(wpos.y - Config::menu_y) > 0.5f)) {
-        Config::menu_w = kFixedMenuW;
-        Config::menu_h = kFixedMenuH;
+        Config::menu_w = wsize.x;
+        Config::menu_h = wsize.y;
         Config::menu_x = wpos.x;
         Config::menu_y = wpos.y;
         internal_config::ConfigManager::SaveMenuSize();
@@ -2150,7 +2150,7 @@ void Menu::toggleMenu() {
         MenuUI::NotifyTab(activeTab);
     } else {
         MenuUI::AnimTick(false);
-        if (Config::menu_w >= 640.f && Config::menu_h >= 420.f)
+        if (Config::menu_w >= 360.f && Config::menu_h >= 300.f)
             internal_config::ConfigManager::SaveMenuSize();
     }
 }

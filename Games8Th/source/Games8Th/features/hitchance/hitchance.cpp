@@ -10,6 +10,7 @@
 #include "../../utils/console/console.h"
 #include "../../utils/schema/schema.h"
 #include "../../utils/fnv1a/fnv1a.h"
+#include "../../offsets/offsets.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -35,7 +36,7 @@ namespace {
 // FX_FireBullets @ 0x180CB6F30 local: seed=a7+1; nBullets @ VData+0x738 (1848)
 // FireBullet @ 0x1808474E0 dir = fwd - right*sx + up*sy
 // ComputeAimPunchFire @ 0x180812CC0 services punch @ fire GameTime
-// GetRemovedAimPunch @ 0x18088BBB0 services@pawn+0x14B8
+// GetRemovedAimPunch @ 0x18088BBB0 services@pawn+0x1598
 // UpdateTurningInAccuracy @ 0x1807EA5B0
 // GetWeaponInAccuracyRecoveryTime @ 0x1807CF600
 // Seed path: SPREADSEEDGEN(punched, tick) -> CalcSpread(..., seed+1, ...)
@@ -58,14 +59,14 @@ FnComputeRandomSeed g_computeSeed = nullptr;
 FnCalcSpread g_calcSpread = nullptr;
 FnUpdateTurningInAccuracy g_updateTurning = nullptr;
 FnGetRecoveryTime g_getRecoveryTime = nullptr;
-// IDA GetRemovedAimPunch(pawn, out) - rcx rewritten to services@+0x14B8; rdx/r8 pass through to 812D90
+// IDA GetRemovedAimPunch(pawn, out) - rcx rewritten to services@+0x1598; rdx/r8 pass through to 812D90
 using FnGetRemovedAimPunch = void*(__fastcall*)(void* pawn, QAngle_t* out, char flag);
 FnGetRemovedAimPunch g_getRemovedAimPunch = nullptr;
 // IDA sub_180812CC0(services, out, fireGameTime, flag) - CSBaseGunFire punch (new aimpunch)
 // Same dual-track composer as GetRemovedAimPunch/812D90, but timebase = fire tick.
 using FnComputeAimPunchFire = float*(__fastcall*)(void* services, QAngle_t* out, void* fireGameTime, int flag);
 FnComputeAimPunchFire g_computeAimPunchFire = nullptr;
-std::uint32_t g_aimPunchServicesOff = 0x14B8;
+std::uint32_t g_aimPunchServicesOff = Offset::FB::m_pAimPunchServices;
 void* g_fxFireBullets = nullptr;
 bool g_ready = false;
 
@@ -755,7 +756,7 @@ bool Init() {
 			if (!pPunch || g_aimPunchServicesOff < 0x100 || g_aimPunchServicesOff >= 0x20000)
 				g_aimPunchServicesOff = sch;
 		} else if (g_aimPunchServicesOff < 0x100 || g_aimPunchServicesOff >= 0x20000) {
-			g_aimPunchServicesOff = 0x14B8; // last-resort dump
+			g_aimPunchServicesOff = Offset::FB::m_pAimPunchServices; // last-resort dump
 		}
 	}
 

@@ -12,7 +12,7 @@ namespace HitChance {
 // CalcSpread 0x180CB77A0, FX_FireBullets 0x180CB6F30 local seed+1
 // FireBullet 0x1808474E0 dir=fwd-right*sx+up*sy
 // FillGunFireData 0x1807D1180 (CSBaseGunFire fill via 7C8B40)
-// ComputeAimPunchFire 0x180814080(services@pawn+0x14B8, out, fireData, 1)
+// ComputeAimPunchFire 0x180814080(services@pawn+0x1598, out, fireData, 1)
 // then angles += punch (7C18A0) - SPREADSEEDGEN sees punched angles
 // GetRemovedAimPunch 0x18088BBB0
 // UpdateTurningInAccuracy 0x1807EA5B0, RecoveryTime 0x1807CF600
