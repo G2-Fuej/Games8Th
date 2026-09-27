@@ -20,6 +20,8 @@ namespace FB {
     constexpr std::uint32_t m_clrRender            = 0xCA0;
     constexpr std::uint32_t m_nRenderMode          = 0xC80;
     constexpr std::uint32_t m_vOldOrigin           = 0x14A4;
+    constexpr std::uint32_t m_pMovementServices     = 0x1330;
+    constexpr std::uint32_t m_pWeaponServices       = 0x12F0;
 	constexpr std::uint32_t m_vecAbsOrigin         = 0xC8;   // CGameSceneNode
 	constexpr std::uint32_t m_modelState           = 0x140;  // CSkeletonInstance
 	constexpr std::uint32_t m_ModelName            = 0xA8;   // CModelState (CUtlSymbolLarge)

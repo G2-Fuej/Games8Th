@@ -2,6 +2,7 @@
 #include "../../../Games8Th/utils/memory/memorycommon.h"
 #include "../../../Games8Th/utils/math/vector/vector.h"
 #include "../../../Games8Th/utils/schema/schema.h"
+#include "../../../Games8Th/offsets/offsets.h"
 #include "../C_CSWeaponBase/C_CSWeaponBase.h"
 #include "../C_BaseEntity/C_BaseEntity.h"
 
@@ -11,9 +12,28 @@ class C_CSPlayerPawn : public C_BaseEntity {
 public:
 	schema(Vector_t, m_vOldOrigin, "C_BasePlayerPawn->m_vOldOrigin");
 	schema(Vector_t, m_vecViewOffset, "C_BaseModelEntity->m_vecViewOffset");
-	schema(CCSPlayer_WeaponServices*, m_pWeaponServices, "C_BasePlayerPawn->m_pWeaponServices");
+	// Schema may be unavailable for one frame during live injection. Keep the
+	// current dumper fallbacks so the shared session gate does not disable every
+	// combat/movement feature while glow (which does not need services) works.
+	[[nodiscard]] inline CCSPlayer_WeaponServices* m_pWeaponServices() const noexcept {
+		static constexpr std::uint32_t kFallback = Offset::FB::m_pWeaponServices;
+		std::uint32_t off = SchemaFinder::Get(hash_32_fnv1a_const("C_BasePlayerPawn->m_pWeaponServices"));
+		if (!off) off = kFallback;
+		CCSPlayer_WeaponServices* out = nullptr;
+		__try { out = *reinterpret_cast<CCSPlayer_WeaponServices**>(reinterpret_cast<std::uintptr_t>(this) + off); }
+		__except (EXCEPTION_EXECUTE_HANDLER) { return nullptr; }
+		return out;
+	}
 	schema(CPlayer_ObserverServices*, m_pObserverServices, "C_BasePlayerPawn->m_pObserverServices");
-	schema(void*, m_pMovementServices, "C_BasePlayerPawn->m_pMovementServices");  // CCSPlayer_MovementServices*
+	[[nodiscard]] inline void* m_pMovementServices() const noexcept {
+		static constexpr std::uint32_t kFallback = Offset::FB::m_pMovementServices;
+		std::uint32_t off = SchemaFinder::Get(hash_32_fnv1a_const("C_BasePlayerPawn->m_pMovementServices"));
+		if (!off) off = kFallback;
+		void* out = nullptr;
+		__try { out = *reinterpret_cast<void**>(reinterpret_cast<std::uintptr_t>(this) + off); }
+		__except (EXCEPTION_EXECUTE_HANDLER) { return nullptr; }
+		return out;
+	}
 	// CCSPlayer_ItemServices* - m_bHasHelmet @ +0x49, m_bHasDefuser @ +0x48
 	schema(void*, m_pItemServices, "C_BasePlayerPawn->m_pItemServices");
 	// Live dump: both live on C_BaseEntity (not C_BasePlayerPawn) - wrong class = schema miss 0x0A6DB2C3

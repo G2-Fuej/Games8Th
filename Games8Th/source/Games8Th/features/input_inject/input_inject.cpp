@@ -15,7 +15,7 @@
 namespace InputInject {
 namespace {
 
-constexpr std::uintptr_t kMoveServicesOff = 0x1248;
+constexpr std::uintptr_t kMoveServicesOff = Offset::FB::m_pMovementServices;
 constexpr std::uintptr_t kButtonsOff = 0x50;
 constexpr std::uintptr_t kLegacyJumpOff = 0x6B0;
 constexpr std::uintptr_t kModernJumpOff = 0x6C8;

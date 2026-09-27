@@ -48,6 +48,8 @@ FB_FIELDS = {
     "m_clrRender": ("C_BaseModelEntity", "m_clrRender"),
     "m_nRenderMode": ("C_BaseModelEntity", "m_nRenderMode"),
     "m_vOldOrigin": ("C_BasePlayerPawn", "m_vOldOrigin"),
+    "m_pMovementServices": ("C_BasePlayerPawn", "m_pMovementServices"),
+    "m_pWeaponServices": ("C_BasePlayerPawn", "m_pWeaponServices"),
     "m_vecAbsOrigin": ("CGameSceneNode", "m_vecAbsOrigin"),
     "m_modelState": ("CSkeletonInstance", "m_modelState"),
     "m_ModelName": ("CModelState", "m_ModelName"),

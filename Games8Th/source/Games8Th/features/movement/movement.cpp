@@ -20,7 +20,7 @@ namespace {
 	constexpr std::uintptr_t kFlagsOff = 0x3F4;
 	constexpr std::uintptr_t kAbsVelOff = 0x3F8;
 	constexpr std::uintptr_t kGroundEntityOff = 0x530;
-	constexpr std::uintptr_t kMoveServicesOff = 0x1248; // C_BasePlayerPawn->m_pMovementServices
+	constexpr std::uintptr_t kMoveServicesOff = Offset::FB::m_pMovementServices;
 	constexpr std::uintptr_t kButtonsOff = 0x50;        // CPlayer_MovementServices->m_nButtons
 	constexpr std::uintptr_t kStaminaOffFallback = 0x694;
 	constexpr float kPi = 3.14159265358979323846f;

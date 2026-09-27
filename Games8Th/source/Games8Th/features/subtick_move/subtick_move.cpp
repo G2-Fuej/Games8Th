@@ -101,7 +101,7 @@ bool Init()
 //   so once grounded with a burned press the chain is dead until re-tap unless
 //   we synthesize a recovery edge on the ground.
 
-constexpr std::uintptr_t kMoveSvcOff = 0x1248;    // pawn -> m_pMovementServices
+constexpr std::uintptr_t kMoveSvcOff = Offset::FB::m_pMovementServices;
 
 // Schema-first offsets (Aug-22 client.dll update proved frozen dump offsets
 // rot silently: bhop kept stripping IN_JUMP while prediction read garbage and

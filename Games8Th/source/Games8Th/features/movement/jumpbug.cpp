@@ -24,7 +24,7 @@ namespace {
 
 constexpr std::uintptr_t kFlagsOff = 0x3F4;
 constexpr std::uintptr_t kAbsVelOff = 0x3F8;
-constexpr std::uintptr_t kMoveSvcOff = 0x1248;
+constexpr std::uintptr_t kMoveSvcOff = Offset::FB::m_pMovementServices;
 constexpr std::uintptr_t kMoveTraceCtxOff = 0x638;
 constexpr std::uint64_t kJump = IN_JUMP;
 constexpr std::uint64_t kDuck = IN_DUCK;

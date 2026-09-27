@@ -72,9 +72,9 @@ CCSPlayer_WeaponServices* C_CSPlayerPawn::GetWeaponServices() const {
 		return nullptr;
 
 	// Field lives on C_BasePlayerPawn, NOT C_CSPlayerPawn (schema hash 0x3E4F3B63 was the bad path)
-	const uint32_t off = SchemaFinder::Get(hash_32_fnv1a_const("C_BasePlayerPawn->m_pWeaponServices"));
+	uint32_t off = SchemaFinder::Get(hash_32_fnv1a_const("C_BasePlayerPawn->m_pWeaponServices"));
 	if (!off)
-		return nullptr;
+		off = Offset::FB::m_pWeaponServices;
 
 	CCSPlayer_WeaponServices* ws = nullptr;
 	__try {
