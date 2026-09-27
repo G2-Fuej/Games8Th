@@ -58,16 +58,31 @@
 #include "../../cs2/datatypes/viewmatrix/viewmatrix.h"
 #include "../features/bones/bones.h"
 #include "../utils/memory/memsafe/memsafe.h"
+#include "../offsets/offsets.h"
 
 C_CSPlayerPawn* H::SafeLocalPlayer() noexcept
 {
-	if (!oGetLocalPlayer)
-		return nullptr;
 	C_CSPlayerPawn* p = nullptr;
-	__try {
-		p = oGetLocalPlayer(0);
-	} __except (EXCEPTION_EXECUTE_HANDLER) {
-		return nullptr;
+	if (oGetLocalPlayer) {
+		__try {
+			p = oGetLocalPlayer(0);
+		} __except (EXCEPTION_EXECUTE_HANDLER) {
+			p = nullptr;
+		}
+	}
+	// Independent dumper fallback. This also covers a stale function signature
+	// whose bytes still match but whose return contract changed.
+	if (!p) {
+		__try {
+			if (HMODULE client = GetModuleHandleA("client.dll")) {
+				auto** pp = reinterpret_cast<C_CSPlayerPawn**>(
+					reinterpret_cast<std::uintptr_t>(client)
+					+ Offset::Global::dwLocalPlayerPawn);
+				p = pp ? *pp : nullptr;
+			}
+		} __except (EXCEPTION_EXECUTE_HANDLER) {
+			p = nullptr;
+		}
 	}
 	if (!p)
 		return nullptr;

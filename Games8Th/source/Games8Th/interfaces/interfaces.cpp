@@ -18,6 +18,7 @@
 #include "../features/auto_pistol/auto_pistol.h"
 #include "../features/enemy_spec/enemy_spec.h"
 #include "../features/sdk_prio_a/sdk_prio_a.h"
+#include "../offsets/offsets.h"
 #include "../../cs2/entity/CCSPlayerController/CCSPlayerController.h"
 #include "../../cs2/entity/C_CSPlayerPawn/C_CSPlayerPawn.h"
 
@@ -207,6 +208,18 @@ void Input::init()
 		ppCSGOInput = reinterpret_cast<void**>(M::GetAbsoluteAddress(hit, 3, 0));
 		pCSGOInput = SehReadPtr(ppCSGOInput);
 	}
+	// Pattern fallback for the shared command pipeline. A null CSGOInput makes
+	// aim/movement/trigger paths no-op while render-only glow keeps working.
+	if (!pCSGOInput) {
+		if (HMODULE client = GetModuleHandleA("client.dll")) {
+			void** dumpGlobal = reinterpret_cast<void**>(
+				reinterpret_cast<std::uintptr_t>(client) + Offset::Global::dwCSGOInput);
+			if (void* dumpInput = SehReadPtr(dumpGlobal)) {
+				ppCSGOInput = dumpGlobal;
+				pCSGOInput = dumpInput;
+			}
+		}
+	}
 
 	// First CUserCmdArray table - IDA off_18207DF70 @ CreateMove path
 	// was: ... 48 8B CF 48 8B F0 (mov rsi,rax) - now mov r15,rax
@@ -248,6 +261,15 @@ void Input::init()
 void* Input::GetCSGOInput()
 {
 	pCSGOInput = SehReadPtr(ppCSGOInput);
+	if (!pCSGOInput) {
+		if (HMODULE client = GetModuleHandleA("client.dll")) {
+			void** dumpGlobal = reinterpret_cast<void**>(
+				reinterpret_cast<std::uintptr_t>(client) + Offset::Global::dwCSGOInput);
+			pCSGOInput = SehReadPtr(dumpGlobal);
+			if (pCSGOInput)
+				ppCSGOInput = dumpGlobal;
+		}
+	}
 	return pCSGOInput;
 }
 

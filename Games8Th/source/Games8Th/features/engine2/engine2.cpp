@@ -5,6 +5,7 @@
 #include "../../utils/memory/gaa/gaa.h"
 #include "../../utils/memory/memsafe/memsafe.h"
 #include "../../utils/console/console.h"
+#include "../../offsets/offsets.h"
 
 #include <Windows.h>
 #include <cstring>
@@ -13,6 +14,7 @@ namespace Engine2 {
 namespace {
 
 void** g_ppNetworkGameClient = nullptr;
+void** g_ppNetworkGameClientDump = nullptr;
 uintptr_t g_fnGetLevelName = 0;
 uintptr_t g_fnGetLevelNameShort = 0;
 uintptr_t g_fnIsInGame = 0;
@@ -161,6 +163,15 @@ bool Init() {
 		g_ppNetworkGameClient = reinterpret_cast<void**>(M::
 getAbsoluteAddress(a, 3));
 
+	// The signature can still match a sibling store after a CS2 update. Keep
+	// the cs2-dumper global as an independent fallback instead of letting the
+	// shared SessionEntityReady gate disable every non-glow feature.
+	if (HMODULE engine = GetModuleHandleA("engine2.dll")) {
+		g_ppNetworkGameClientDump = reinterpret_cast<void**>(
+			reinterpret_cast<std::uintptr_t>(engine)
+			+ Offset::Global::engine_dwNetworkGameClient);
+	}
+
 	// Free fns (no this) - IDA verified
 	g_fnGetLevelNameShort = Scan("GetLevelNameShort",
 		"48 83 EC 28 E8 ? ? ? ? 84 C0 74 0C 48 8D 05 ? ? ? ? 48 83 C4 28 C3 48 8B 0D ? ? ? ? 48 85 C9 74 23 83 B9 30 02 00 00 02 7C 1A 48 8B 89 18 02 00 00");
@@ -205,7 +216,9 @@ Ok("Engine2 build %d", bn);
 void* NetworkGameClient() {
 	if (!g_inited)
 		Init();
-	return SehReadPtr(g_ppNetworkGameClient);
+	if (void* p = SehReadPtr(g_ppNetworkGameClient))
+		return p;
+	return SehReadPtr(g_ppNetworkGameClientDump);
 }
 
 int SignonState() {

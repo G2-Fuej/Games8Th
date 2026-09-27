@@ -49,6 +49,7 @@ namespace Global {
     constexpr std::ptrdiff_t dwGlobalVars = 0x222BF88;
     constexpr std::ptrdiff_t dwGlowManager = 0x255C8F0;
     constexpr std::ptrdiff_t dwLocalPlayerController = 0x2537628;
+    constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x25606D8;
     constexpr std::ptrdiff_t dwPlantedC4 = 0x24C9290;
     constexpr std::ptrdiff_t dwPrediction = 0x25605E0;
     constexpr std::ptrdiff_t dwSensitivity = 0x255C820;
