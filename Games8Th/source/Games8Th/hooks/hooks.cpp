@@ -152,7 +152,12 @@ static bool LocalPawnCmdReady(C_CSPlayerPawn* p) noexcept
 	std::uint32_t last = 0;
 	if (!Mem::ReadField(move, s_off, last))
 		return false;
-	return last != 0;
+	if (!last) {
+		static std::atomic<std::uint32_t> s_dbg1 = 0;
+		if (s_dbg1.fetch_add(1, std::memory_order_relaxed) < 5u)
+			OutputDebugStringA("Games8Th: LocalPawnCmdReady last=0 -> allowed (gate relaxed)");
+	}
+	return true; // last==0: ProcessMovement not ticked yet; don't gate combat pipeline
 }
 
 // Menu input block hooks - do NOT ShowCursor here (refcount spam); Present owns cursor.
@@ -524,6 +529,15 @@ static bool CreateMoveBody(void* pInput, int slot, bool active)
 
 	const bool sessionOk = H::SessionEntityOk() && !H::SessionMapLeaving();
 
+	if (!sessionOk) {
+		static std::atomic<std::uint32_t> s_dbg2 = 0;
+		if (s_dbg2.fetch_add(1, std::memory_order_relaxed) < 5u) {
+			char buf[160];
+			snprintf(buf, sizeof(buf), "Games8Th: sessionOk=false entOk=%d leaving=%d", (int)H::SessionEntityOk(), (int)H::SessionMapLeaving());
+			OutputDebugStringA(buf);
+		}
+	}
+
 	// Undo last tick's cmd pitch-89 before original copies it onto the camera.
 	if (slot == 0) {
 		__try { FastLadder::RestoreCamera(); }
@@ -549,12 +563,18 @@ static bool CreateMoveBody(void* pInput, int slot, bool active)
 		return origRet;
 	}
 	if (!sessionOk) return origRet;
-	if (!LocalPawnCmdReady(H::SafeLocalAlive())) return origRet;
+	if (!LocalPawnCmdReady(H::SafeLocalAlive())) {
+		static std::atomic<std::uint32_t> s_dbg4 = 0;
+		if (s_dbg4.fetch_add(1, std::memory_order_relaxed) < 5u)
+			OutputDebugStringA("Games8Th: LocalPawnCmdReady gate failed");
+		return origRet;
+	}
 
 	CUserCmd* user_cmd = Input::get_user_cmd(0);
 	if (!user_cmd) {
 		static int s_nullCount = 0;
 		if (s_nullCount < 5) {
+			OutputDebugStringA("Games8Th: get_user_cmd null");
 			++s_nullCount;
 			Con::Error(
 				"get_user_cmd null (SetupCmd=%p GetCmd=%p Array=%p Tick=%p Table=%p)",
